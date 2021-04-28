@@ -1,33 +1,31 @@
-var ctx = document.getElementById('myChart');
-
-function getUpperBounderLine() {
-    const dd = myData.graphObj.expected;
+function getUpperBounderLine(data) {
+    const dd = data.graphObj.expected;
     const dd2 = dd.map(row=>row[2]);
     return dd2;
 }
 
-function getDownBounderLine() {
-    const dd = myData.graphObj.expected;
+function getDownBounderLine(data) {
+    const dd = data.graphObj.expected;
     const dd2 = dd.map(row=>row[3]);
     return dd2;
 
 }
 
-function getPredictedLine() {
-    const dd = myData.graphObj.expected;
+function getPredictedLine(data) {
+    const dd = data.graphObj.expected;
     const dd2 = dd.map(row=>row[1]);
     return dd2;
 }
 
 
-function getActual() {
-    const dd = myData.graphObj.actual;
+function getActual(data) {
+    const dd = data.graphObj.actual;
     const dd2 = dd.map(row=>row[1]);
     return dd2;
 }
 
-function getDatesLabels() {
-    const dd = myData.graphObj.expected;
+function getDatesLabels(data) {
+    const dd = data.graphObj.expected;
     const dd2 = dd.map(row=> {
         const date = new Date(row[0])
         return `${date.getDate()}/${date.getMonth()+1}`
@@ -35,55 +33,65 @@ function getDatesLabels() {
     return dd2;
 }
 
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-];
-const data = {
-    labels: getDatesLabels(),
-    datasets: [
-        {
-        label: 'Upper bound',
-        backgroundColor: '#7db9fe30',
-        borderColor: '#7db9fe',
-        data: getUpperBounderLine(),
-        fill: '1',
-        tension: 0.2
-        },
-        {
-            label: 'Lower bound',
-            backgroundColor: '#7db9fe30',
-            borderColor: '#7db9fe',
-            data: getDownBounderLine(),
-            tension: 0.2
-        },
-        {
-            label: 'Actual',
-            backgroundColor: 'rgb(196,243,203)',
-            borderColor: 'rgb(252,18,0)',
-            data: getActual(),
-            tension: 0.2
-        }
-    ]
-};
+function getChartData(data) {
+    return {
+        labels: getDatesLabels(data),
+        datasets: [
+            {
+                label: 'Upper bound',
+                backgroundColor: '#7db9fe30',
+                borderColor: '#7db9fe',
+                data: getUpperBounderLine(data),
+                fill: '1',
+                tension: 0.2
+            },
+            {
+                label: 'Lower bound',
+                backgroundColor: '#7db9fe30',
+                borderColor: '#7db9fe',
+                data: getDownBounderLine(data),
+                tension: 0.2
+            },
+            {
+                label: 'Actual',
+                backgroundColor: 'rgb(196,243,203)',
+                borderColor: 'rgb(252,18,0)',
+                data: getActual(data),
+                tension: 0.2
+            }
+        ]
+    };
+}
 
-const config = {
-    type: 'line',
-    data,
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-    }
-};
+
 Chart.defaults.scale.grid.display = false;
 Chart.defaults.scale.ticks.display = false;
 Chart.defaults.plugins.legend.display = false;
 
-var myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-);
+
+function getConfig(data) {
+    const chartData = getChartData(data)
+
+    const config = {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    };
+
+    return config;
+}
+
+
+function drawChart(elementId, data) {
+    var myChart = new Chart(
+        document.getElementById(elementId),
+        getConfig(data)
+    );
+}
+
+
+
+window.drawChart = drawChart;
