@@ -1,14 +1,21 @@
 function getUpperBounderLine(data) {
     const dd = data.graphObj.expected;
-    const dd2 = dd.map(row=>row[2]);
+    const dd2 = [];
+    for (let i = 0; i <dd.length ; i++) {
+        const diff = dd[i][2] - dd[i][1];
+        dd2.push(dd[i][1] + diff * 20)
+    }
     return dd2;
 }
 
 function getDownBounderLine(data) {
     const dd = data.graphObj.expected;
-    const dd2 = dd.map(row=>row[3]);
+    const dd2 = [];
+    for (let i = 0; i <dd.length ; i++) {
+        const diff = dd[i][1] - dd[i][3];
+        dd2.push(dd[i][3] - diff * 20)
+    }
     return dd2;
-
 }
 
 function getPredictedLine(data) {
